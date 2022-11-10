@@ -24,6 +24,7 @@ class CandidateForm(ModelForm):
         fields = [
             'name', 'zipcode', 'username', 'password', 'profile_bio', 'education', 'github', 'experience', 'skills'
         ]
+        exclude = ['company', 'user_type']
 
 
 class RecruiterForm(ModelForm):
@@ -32,3 +33,11 @@ class RecruiterForm(ModelForm):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
     company = forms.CharField()
+
+    class Meta:
+        model = User
+        field = [
+            'name', 'zipcode', 'username', 'password', 'company'
+        ]
+        exclude = ['profile_bio', 'education',
+                   'github', 'experience', 'skills', 'user_type']

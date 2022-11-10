@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+
+
 class User(models.Model):
     '''Every user is represented in the class'''
     USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
@@ -8,7 +10,8 @@ class User(models.Model):
     zipcode = models.IntegerField()
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
-    user_type = models.CharField(max_length=9, choices=USER_TYPES, default=USER_TYPES[0][1])
+    user_type = models.CharField(
+        max_length=9, choices=USER_TYPES)
 
     # Candidate Types
     profile_bio = models.TextField(max_length=500, blank=True)

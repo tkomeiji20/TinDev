@@ -8,7 +8,13 @@
   </head>
   <body>
     <h1>Create Recruiter</h1>
-    <form method="post">{% csrf_token %} {{ form.as_p }}</form>
-    <a href="/user/createrecruiter/"><button>Create New Recruiter</button></a>
+    <form
+      action="{% url 'create_recruiter' %}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %} {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
   </body>
 </html>

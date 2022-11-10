@@ -16,14 +16,21 @@ def new_user(request):
 
 
 def new_recruiter(request):
+    form = RecruiterForm(request.POST, request.FILES,
+                         initial={'user_type': USER_TYPES[0][0]})
     context = {
         "form": RecruiterForm()
     }
+
+    if form.is_valid():
+        form.save()
+
     return render(request, 'user/createrecruiter.html', context)
 
 
 def new_candidate(request):
-    form = CandidateForm(request.POST, request.FILES)
+    form = CandidateForm(request.POST, request.FILES,
+                         initial={'user_type': USER_TYPES[1][0]})
     context = {
         "form": CandidateForm
     }
