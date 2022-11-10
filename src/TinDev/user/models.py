@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     '''Every user is represented in the class'''
-    USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
+    USER_TYPES = [('recruiter', 'Recruiter'), ('candidate', 'Candidate')]
     name = models.CharField(max_length=50)
     zipcode = models.IntegerField()
     username = models.CharField(max_length=20)
