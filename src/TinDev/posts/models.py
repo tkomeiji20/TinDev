@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Post(models.Model):
-    JOB_TYPE = [('Part-Time', 'part'), ('Full-Time', 'full')]
+    JOB_TYPE = [('part', 'Part-Time'), ('full', 'Full-Time')]
     position = models.CharField(max_length=20)
     type = models.CharField(max_length=10, choices=JOB_TYPE)
     location = models.CharField(max_length=50)
