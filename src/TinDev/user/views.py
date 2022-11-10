@@ -13,16 +13,15 @@ class CandidateForm(forms.ModelForm):
         model = User
         # Put Candidate forms
         fields =['name', 'profile_bio', 'zipcode', 'skills', 'github',
-        'experience', 'education', 'username', 'password']
+        'experience', 'education', 'username', 'password', 'user_type']
         widgets = {
             'password': forms.PasswordInput(),
-            # 'user_type': forms.CharField(widget=forms.HiddenInput(), initial= USER_TYPES[1][0], max_length=9)
+            'user_type': forms.HiddenInput(),
         }
 
 def new_candidate(request):
     if request.method == 'POST':
         form = CandidateForm(request.POST)
-
 
         if form.is_valid():
             form.save()

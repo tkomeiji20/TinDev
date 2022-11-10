@@ -8,7 +8,7 @@ class User(models.Model):
     zipcode = models.IntegerField()
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
-    user_type = models.CharField(max_length=9, choices=USER_TYPES)
+    user_type = models.CharField(max_length=9, choices=USER_TYPES, default=USER_TYPES[0][1])
 
     # Candidate Types
     profile_bio = models.TextField(max_length=500, blank=True)
