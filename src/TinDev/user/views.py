@@ -65,3 +65,28 @@ def create_recruiter(request):
 
 def index(request):
     return render(request, 'user/index.html')
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+
+
+def login(request):
+    if request.method == 'GET':
+        form = LoginForm()
+        return render(request, 'user/login.html', {'form': form})
+    elif request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = User.objects.get(username=username)
+            if not user or user.password != password:
+                # Probably should render error message
+                return render(request, 'user/login.html', {'form': form})
+            else:
+                return HttpResponseRedirect('/')
