@@ -5,22 +5,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login, logout
 from .models import User
+from .forms import CandidateForm, RecruiterForm, LoginForm
 
 # NOTE: See TinDev views login
 USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 
 # https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
-class CandidateForm(forms.ModelForm):
-    # user_type = forms.CharField(widget=forms.HiddenInput(), initial= USER_TYPES[1][0], max_length=9)
-    class Meta:
-        model = User
-        # Put Candidate forms
-        fields =['name', 'profile_bio', 'zipcode', 'skills', 'github',
-        'experience', 'education', 'username', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-            # 'user_type': forms.HiddenInput(),
-        }
+
 
 def new_candidate(request):
     '''Handles requests made to create candidates'''
@@ -43,7 +34,8 @@ def new_candidate(request):
                 user.save()
 
                 logout(request)
-                DjangoUser.objects.create_user(username=username, password=user.password)
+                DjangoUser.objects.create_user(
+                    username=username, password=user.password)
                 return HttpResponseRedirect('/user/dashboard')
         return HttpResponseRedirect('/user/login')
     else:
@@ -52,15 +44,6 @@ def new_candidate(request):
 
     return render(request, 'user/create.html', {'form': form, 'user_type': 'candidate'})
 
-class RecruiterForm(forms.ModelForm):
-    '''Recruiter Signup Information'''
-    class Meta:
-        model = User
-        # Put Candidate forms
-        fields =['name', 'company', 'zipcode', 'username', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
 
 def new_recruiter(request):
     '''Handle new recruiter requests'''
@@ -71,7 +54,8 @@ def new_recruiter(request):
             # TODO: Check that there is not already a user with the given username
             form.save()
             logout(request)
-            DjangoUser.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            DjangoUser.objects.create_user(
+                username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
             return HttpResponseRedirect('/user/login')
         return HttpResponseRedirect('/user/create/recruiter')
@@ -81,25 +65,22 @@ def new_recruiter(request):
     return render(request, 'user/create.html', {'form': form, 'user_type': 'recruiter'})
 
 # Create your views here.
+
+
 def create(request):
     return new_candidate(request)
+
 
 def create_candidate(request):
     return new_candidate(request)
 
+
 def create_recruiter(request):
     return new_recruiter(request)
 
+
 def index(request):
     return render(request, 'user/index.html')
-
-class LoginForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
 
 
 def LoginView(request):
@@ -124,9 +105,11 @@ def LoginView(request):
                 # TODO: Add an error message
                 return render(request, 'user/login.html')
 
+
 def candidate_dashboard(request):
     user = User.objects.get(username=request.user.username)
     return render(request, 'user/candidate_dashboard.html', {'user': user})
+
 
 def LogoutView(request):
     logout(request)
