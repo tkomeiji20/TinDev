@@ -1,11 +1,14 @@
+
+from django.forms import ModelForm
 from django import forms
+from .models import User
 
 
-class UserForm(forms.Form):
+class UserForm(ModelForm):
     pass
 
 
-class CandidateForm(forms.Form):
+class CandidateForm(ModelForm):
     name = forms.CharField()
     zipcode = forms.IntegerField()
     username = forms.CharField()
@@ -16,8 +19,14 @@ class CandidateForm(forms.Form):
     experience = forms.TextInput()
     skills = forms.TextInput()
 
+    class Meta:
+        model = User
+        fields = [
+            'name', 'zipcode', 'username', 'password', 'profile_bio', 'education', 'github', 'experience', 'skills'
+        ]
 
-class RecruiterForm(forms.Form):
+
+class RecruiterForm(ModelForm):
     name = forms.CharField()
     zipcode = forms.IntegerField()
     username = forms.CharField()

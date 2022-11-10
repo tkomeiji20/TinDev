@@ -8,9 +8,13 @@
   </head>
   <body>
     <h1>Create Candidate</h1>
-    <form action="{{ user_type }}" method="post">
+    <form
+      action="{% url 'create_candidate' %}"
+      method="post"
+      enctype="multipart/form-data"
+    >
       {% csrf_token %} {{ form.as_p }}
+      <input type="submit" value="Submit" />
     </form>
-    <input type="submit" value="Submit" />
   </body>
 </html>

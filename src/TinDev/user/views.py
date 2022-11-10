@@ -10,7 +10,6 @@ USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 
 def new_user(request):
     context = {
-        "form": UserForm()
     }
 
     return render(request, 'user/create.html', context)
@@ -24,30 +23,13 @@ def new_recruiter(request):
 
 
 def new_candidate(request):
+    form = CandidateForm(request.POST, request.FILES)
     context = {
-        "form": CandidateForm()
+        "form": CandidateForm
     }
-    print('tets')
-    if request.method == 'POST':
-        print('test')
-        form = CandidateForm(request.POST)
-        if form.is_valid():
-            name = forms.cleaned_data['name']
-            zipcode = forms.cleaned_data['zipcode']
-            username = forms.cleaned_data['username']
-            password = forms.cleaned_data['password']
-            profile_bio = forms.cleaned_data['profile_bio']
-            education = forms.cleaned_data['education']
-            github = forms.cleaned_data['github']
-            experience = forms.cleaned_data['experience']
-            skills = forms.cleaned_data['skills']
-            user = User(
-                name=name, zipcode=zipcode, username=username, password=password,
-                profile_bio=profile_bio, education=education, github=github, experience=experience,
-                skills=skills, user=user, user_type=USER_TYPES[1], company='')
-            user.save()
-    else:
-        print("another tets")
+    if form.is_valid():
+        form.save()
+
     return render(request, 'user/createcandidate.html', context)
 
 
