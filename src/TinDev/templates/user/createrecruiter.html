@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="" />
   </head>
   <body>
-    <h1>Create User</h1>
+    <h1>Create Recruiter</h1>
     <form method="post">{% csrf_token %} {{ form.as_p }}</form>
-    <a href="/user/createrecruiter"><button>Create New Recruiter</button></a>
-    <a href="/user/createcandidate"><button>Create New Candidate</button></a>
+    <a href="/user/createrecruiter/"><button>Create New Recruiter</button></a>
   </body>
 </html>
