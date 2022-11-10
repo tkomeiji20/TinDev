@@ -12,10 +12,10 @@ class User(models.Model):
 
     # Candidate Types
     profile_bio = models.TextField(max_length=500, blank=True)
-    skills = models.TextField()
-    github = models.CharField(max_length=50, blank=True)
-    experience = models.IntegerField()
     education = models.TextField(blank=True)
+    github = models.CharField(max_length=50, blank=True)
+    experience = models.IntegerField(null=True)
+    skills = models.TextField(null=True)
 
     # Recruiter
-    company = models.CharField(max_length=50)
+    company = models.CharField(max_length=50, null=True)

@@ -4,10 +4,11 @@ from django.http import HttpResponseRedirect
 from .models import User
 
 # NOTE: See TinDev views login
-
+USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 
 # https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
 class CandidateForm(forms.ModelForm):
+    # user_type = forms.CharField(widget=forms.HiddenInput(), initial= USER_TYPES[1][0], max_length=9)
     class Meta:
         model = User
         # Put Candidate forms
@@ -15,14 +16,18 @@ class CandidateForm(forms.ModelForm):
         'experience', 'education', 'username', 'password']
         widgets = {
             'password': forms.PasswordInput(),
+            # 'user_type': forms.CharField(widget=forms.HiddenInput(), initial= USER_TYPES[1][0], max_length=9)
         }
 
 def new_candidate(request):
     if request.method == 'POST':
         form = CandidateForm(request.POST)
-        form.save()
-        # if form.is_valid():
-        return HttpResponseRedirect('/')
+
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        return HttpResponseRedirect('')
     else:
         form = CandidateForm()
 
@@ -40,9 +45,10 @@ class RecruiterForm(forms.ModelForm):
 def new_recruiter(request):
     if request.method == 'POST':
         form = RecruiterForm(request.POST)
-        form.save()
-        # if form.is_valid():
-        return HttpResponseRedirect('/')
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        return HttpResponseRedirect('')
     else:
         form = RecruiterForm()
 
@@ -51,6 +57,12 @@ def new_recruiter(request):
 # Create your views here.
 def create(request):
     return new_candidate(request)
+
+def create_candidate(request):
+    return new_candidate(request)
+
+def create_recruiter(request):
+    return new_recruiter(request)
 
 def index(request):
     return render(request, 'user/index.html')
