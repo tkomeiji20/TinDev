@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django import forms
 from django.http import HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist
+# from django.contrib.auth.models import User
 from .models import User
 
 # NOTE: See TinDev views login
@@ -23,23 +25,23 @@ def new_candidate(request):
     if request.method == 'POST':
         form = CandidateForm(request.POST)
 
-
-
-
-        print(form.errors)
         if form.is_valid():
             username = form.cleaned_data['username']
             # Check if someone already made the username
             try:
                 user = User.objects.get(username=username)
                 return HttpResponseRedirect('/')
-            except:
+            except ObjectDoesNotExist:
                 form.save()
+
+                # Change the user_type to candidate
                 user = User.objects.get(username=username)
                 user.user_type = 'candidate'
                 user.save()
 
-                return render(request, 'user/candidate_dashboard.html', {'user': user})
+                response = HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
+
+                return response
 
 
 
@@ -106,4 +108,7 @@ def login(request):
                 # Probably should render error message
                 return render(request, 'user/login.html', {'form': form})
             else:
-                return render(request, 'user/candidate_dashboard.html', {'user': user})
+                return HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
+
+def candidate_dashboard(request):
+    return render(request, 'user/candidate_dashboard.html', {'user': user})
