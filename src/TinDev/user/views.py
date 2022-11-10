@@ -127,3 +127,7 @@ def LoginView(request):
 def candidate_dashboard(request):
     user = User.objects.get(username=request.user.username)
     return render(request, 'user/candidate_dashboard.html', {'user': user})
+
+def LogoutView(request):
+    logout(request)
+    return HttpResponseRedirect('/')

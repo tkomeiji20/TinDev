@@ -8,4 +8,5 @@ urlpatterns = [
     path('create/recruiter',views.create_recruiter, name='create_recruiter'),
     path('login/', views.LoginView, name='login'),
     path('dashboard/',views.candidate_dashboard),
+    path('logout/', views.LogoutView),
 ]
