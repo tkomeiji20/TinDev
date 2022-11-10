@@ -16,17 +16,39 @@ class CandidateForm(forms.ModelForm):
         'experience', 'education', 'username', 'password', 'user_type']
         widgets = {
             'password': forms.PasswordInput(),
-            'user_type': forms.HiddenInput(),
+            # 'user_type': forms.HiddenInput(),
         }
 
 def new_candidate(request):
     if request.method == 'POST':
         form = CandidateForm(request.POST)
 
+
+
+
+        print(form.errors)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/')
-        return HttpResponseRedirect('')
+            username = form.cleaned_data['username']
+            form = dict(form.cleaned_data)
+            form['user_type'] = 'candidate'
+            form = CandidateForm(form)
+
+            print(form['user_type'])
+            # Check if someone already made the username
+            try:
+                user = User.objects.get(username=username)
+                return HttpResponseRedirect('/')
+            except:
+                form.save()
+                user = User.objects.get(username=username)
+                # user.user_type = 'candidate'
+                # user.save()
+
+                return render(request, 'user/candidate_dashboard.html', {'user': user})
+
+
+
+        return HttpResponseRedirect('/')
     else:
         form = CandidateForm()
 
