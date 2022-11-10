@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django import forms
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User as DjangoUser
+from django.contrib.auth import authenticate, login
 from .models import User
 
 # NOTE: See TinDev views login
@@ -29,7 +30,7 @@ def new_candidate(request):
             username = form.cleaned_data['username']
             # Check if someone already made the username
             try:
-                user = User.objects.get(username=username)
+                user = DjangoUser.objects.get(username=username)
                 return HttpResponseRedirect('/')
             except ObjectDoesNotExist:
                 form.save()
@@ -39,6 +40,7 @@ def new_candidate(request):
                 user.user_type = 'candidate'
                 user.save()
 
+                DjangoUser.objects.create_user(username=username, password=user.password)
                 response = HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
 
                 return response
@@ -65,6 +67,8 @@ def new_recruiter(request):
         form = RecruiterForm(request.POST)
         if form.is_valid():
             form.save()
+            User.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+
             return HttpResponseRedirect('/')
         return HttpResponseRedirect('')
     else:
@@ -94,7 +98,7 @@ class LoginForm(forms.ModelForm):
         }
 
 
-def login(request):
+def LoginView(request):
     if request.method == 'GET':
         form = LoginForm()
         return render(request, 'user/login.html', {'form': form})
@@ -103,12 +107,21 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = User.objects.get(username=username)
-            if not user or user.password != password:
-                # Probably should render error message
-                return render(request, 'user/login.html', {'form': form})
+
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('/user/dashboard')
             else:
-                return HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
+                return render(request, 'user/login.html')
+
+            # user = User.objects.get(username=username)
+            # if not user or user.password != password:
+            #     # Probably should render error message
+            #     return render(request, 'user/login.html', {'form': form})
+            # else:
+            #     return HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
 
 def candidate_dashboard(request):
+    user = User.objects.get(username=request.user.username)
     return render(request, 'user/candidate_dashboard.html', {'user': user})
