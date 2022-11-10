@@ -8,5 +8,10 @@
     </head>
     <body>
         <h1>Create Candidate</h1>
+        <form action="{{ user_type }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
     </body>
 </html>
