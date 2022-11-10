@@ -89,4 +89,4 @@ def login(request):
                 # Probably should render error message
                 return render(request, 'user/login.html', {'form': form})
             else:
-                return HttpResponseRedirect('/')
+                return render(request, 'user/candidate_dashboard.html', {'user': user})
