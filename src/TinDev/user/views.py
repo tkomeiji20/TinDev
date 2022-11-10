@@ -23,7 +23,9 @@ class CandidateForm(forms.ModelForm):
         }
 
 def new_candidate(request):
+    '''Handles requests made to create candidates'''
     if request.method == 'POST':
+        # Create the candidate
         form = CandidateForm(request.POST)
 
         if form.is_valid():
@@ -31,7 +33,7 @@ def new_candidate(request):
             # Check if someone already made the username
             try:
                 user = DjangoUser.objects.get(username=username)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/user/login')
             except ObjectDoesNotExist:
                 form.save()
 
@@ -42,19 +44,16 @@ def new_candidate(request):
 
                 logout(request)
                 DjangoUser.objects.create_user(username=username, password=user.password)
-                response = HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
-
-                return response
-
-
-
-        return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/user/dashboard')
+        return HttpResponseRedirect('/user/login')
     else:
+        # Show the form
         form = CandidateForm()
 
     return render(request, 'user/create.html', {'form': form, 'user_type': 'candidate'})
 
 class RecruiterForm(forms.ModelForm):
+    '''Recruiter Signup Information'''
     class Meta:
         model = User
         # Put Candidate forms
@@ -64,15 +63,18 @@ class RecruiterForm(forms.ModelForm):
         }
 
 def new_recruiter(request):
+    '''Handle new recruiter requests'''
     if request.method == 'POST':
+        # Attempt to make new recruiter
         form = RecruiterForm(request.POST)
         if form.is_valid():
+            # TODO: Check that there is not already a user with the given username
             form.save()
             logout(request)
             DjangoUser.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
-            return HttpResponseRedirect('/')
-        return HttpResponseRedirect('')
+            return HttpResponseRedirect('/user/login')
+        return HttpResponseRedirect('/user/create/recruiter')
     else:
         form = RecruiterForm()
 
@@ -101,28 +103,26 @@ class LoginForm(forms.ModelForm):
 
 
 def LoginView(request):
+    '''Handle Login requests'''
     if request.method == 'GET':
+        # Show the form
         form = LoginForm()
         return render(request, 'user/login.html', {'form': form})
     elif request.method == 'POST':
+        # Check if the user can login
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
+            # Attempt to login the user
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/user/dashboard')
             else:
+                # TODO: Add an error message
                 return render(request, 'user/login.html')
-
-            # user = User.objects.get(username=username)
-            # if not user or user.password != password:
-            #     # Probably should render error message
-            #     return render(request, 'user/login.html', {'form': form})
-            # else:
-            #     return HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
 
 def candidate_dashboard(request):
     user = User.objects.get(username=request.user.username)
