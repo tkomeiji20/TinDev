@@ -3,7 +3,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User as DjangoUser
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import User
 
 # NOTE: See TinDev views login
@@ -40,6 +40,7 @@ def new_candidate(request):
                 user.user_type = 'candidate'
                 user.save()
 
+                logout(request)
                 DjangoUser.objects.create_user(username=username, password=user.password)
                 response = HttpResponseRedirect('/user/dashboard', headers={'pk':user.id})
 
@@ -67,7 +68,8 @@ def new_recruiter(request):
         form = RecruiterForm(request.POST)
         if form.is_valid():
             form.save()
-            User.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            logout(request)
+            DjangoUser.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
             return HttpResponseRedirect('/')
         return HttpResponseRedirect('')
