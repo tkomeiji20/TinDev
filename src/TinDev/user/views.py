@@ -13,7 +13,7 @@ class CandidateForm(forms.ModelForm):
         model = User
         # Put Candidate forms
         fields =['name', 'profile_bio', 'zipcode', 'skills', 'github',
-        'experience', 'education', 'username', 'password', 'user_type']
+        'experience', 'education', 'username', 'password']
         widgets = {
             'password': forms.PasswordInput(),
             # 'user_type': forms.HiddenInput(),
@@ -29,11 +29,6 @@ def new_candidate(request):
         print(form.errors)
         if form.is_valid():
             username = form.cleaned_data['username']
-            form = dict(form.cleaned_data)
-            form['user_type'] = 'candidate'
-            form = CandidateForm(form)
-
-            print(form['user_type'])
             # Check if someone already made the username
             try:
                 user = User.objects.get(username=username)
@@ -41,8 +36,8 @@ def new_candidate(request):
             except:
                 form.save()
                 user = User.objects.get(username=username)
-                # user.user_type = 'candidate'
-                # user.save()
+                user.user_type = 'candidate'
+                user.save()
 
                 return render(request, 'user/candidate_dashboard.html', {'user': user})
 
