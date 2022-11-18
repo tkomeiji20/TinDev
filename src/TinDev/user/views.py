@@ -36,7 +36,7 @@ def new_candidate(request):
                 logout(request)
                 DjangoUser.objects.create_user(
                     username=username, password=user.password)
-                return HttpResponseRedirect('/user/dashboard')
+                return HttpResponseRedirect('/user/login')
         return HttpResponseRedirect('/user/login')
     else:
         # Show the form
@@ -107,6 +107,7 @@ def LoginView(request):
 
 
 def candidate_dashboard(request):
+    print(request.user.username)
     user = User.objects.get(username=request.user.username)
     return render(request, 'user/candidate_dashboard.html', {'user': user})
 
