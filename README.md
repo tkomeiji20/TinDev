@@ -36,3 +36,7 @@ Describe here the list of steps to get your project running. For example:
    ```sh
    python3 manage.py runserver
    ```
+
+### Project Organization
+
+This Repository is currently divided into three main parts, TinDev, User, and Posts. TinDev is the main application that handles the settings for the entire project. User, is handling any user actions such as creating a new candidate. Posts, will handle everything related to job postings.
