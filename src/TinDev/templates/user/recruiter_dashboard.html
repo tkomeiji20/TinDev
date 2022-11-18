@@ -1,17 +1,14 @@
-{% extends "../Posts/posts.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        {% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
 
-{% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
-
-{% block posts %}
-{% if posts %}
-{% for post in posts %}
-    <h4>{{ post.position }}: {{ post.company }}</h4>
-    <ul>
-        <li>Description: {{ post.description }}</li>
-        <li>Part/Full: {{ post.type }}</li>
-        <li>Location: {{ post.location }}</li>
-        <li>Skills: {{ post.skills }}</li>
-    </ul>
-{% endfor %}
-{% endif %}
-{% endblock %}
+        {% include "../Posts/posts.html" %}
+        <script src="" async defer></script>
+    </body>
+</html>
