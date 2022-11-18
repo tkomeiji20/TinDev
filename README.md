@@ -1,15 +1,13 @@
 # About The Project
 
-Here's a blank template for your group to use.
+TinDev Built by: Trevor Komeiji, Jon Galassi, Dylan Breslaw, Aileen Dugan
 
 ## Built With
 List here all the dependencies of your project (including version). For example:
 
 * [Python](https://www.python.org/)
 * [Django](https://www.djangoproject.com/)
-* [TkInter](https://docs.python.org/3/library/tkinter.html)
 * [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
 
 
 
@@ -20,25 +18,21 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+Install Django
+
+* Django
   ```sh
-  npm install npm@latest -g
+  python -m pip install Django
   ```
 
 ### Installation
 
 Describe here the list of steps to get your project running. For example:
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/tkomeiji20/TinDev.git
    ```
-3. Install NPM packages
+2. Change to TinDev directory
    ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+   python3 manage.py runserver
    ```
