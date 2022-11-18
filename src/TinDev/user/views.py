@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django import forms
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login, logout
+from django.views import View
+from posts.views import getPosts
 from .models import User
 from .forms import CandidateForm, RecruiterForm, LoginForm
 
@@ -106,10 +107,25 @@ def LoginView(request):
                 return render(request, 'user/login.html')
 
 
-def candidate_dashboard(request):
-    print(request.user.username)
-    user = User.objects.get(username=request.user.username)
-    return render(request, 'user/candidate_dashboard.html', {'user': user})
+# def candidate_dashboard(request):
+#     print(request.user.username)
+#     user = User.objects.get(username=request.user.username)
+#     return render(request, 'user/candidate_dashboard.html', {'user': user})
+
+class UserDashboardView(View):
+    '''User Dashboard Logic'''
+    def get(self, request):
+        '''Handle GET Request Logic'''
+        try:
+            user = User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/login')
+
+        print(user.user_type)
+        if user.user_type == 'Recruiter':
+            posts = getPosts()
+            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user})
+        return render(request, 'user/candidate_dashboard.html', {'user': user})
 
 
 def LogoutView(request):

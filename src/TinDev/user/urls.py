@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import UserDashboardView
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -7,6 +8,6 @@ urlpatterns = [
     path('create/candidate',views.create_candidate, name='create_candidate'),
     path('create/recruiter',views.create_recruiter, name='create_recruiter'),
     path('login/', views.LoginView, name='login'),
-    path('dashboard/',views.candidate_dashboard),
+    path('dashboard/', UserDashboardView.as_view()),
     path('logout/', views.LogoutView),
 ]
