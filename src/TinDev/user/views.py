@@ -7,6 +7,7 @@ from django.views import View
 from posts.views import getPosts
 from .models import User
 from .forms import CandidateForm, RecruiterForm, LoginForm
+import datetime
 
 # NOTE: See TinDev views login
 USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
@@ -114,7 +115,10 @@ def LoginView(request):
 
 class UserDashboardView(View):
     '''User Dashboard Logic'''
-    def get(self, request):
+    filters = ""
+
+
+    def get(self, request, filters=""):
         '''Handle GET Request Logic'''
         try:
             user = User.objects.get(username=request.user.username)
@@ -124,7 +128,25 @@ class UserDashboardView(View):
         print(user.user_type)
         if user.user_type == 'Recruiter':
             posts = getPosts()
-            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user})
+            try:
+                if filters:
+                    if filters == "active":
+                        # TODO FIGURE LOGIC OUT
+                        today = datetime.datetime.now(datetime.timezone.utc)
+                        posts = posts.filter(expiration__gte=today.isoformat())
+                    elif filters == "inactive":
+                        # TODO FIGURE LOGIC OUT
+                        today = datetime.datetime.now(datetime.timezone.utc)
+                        posts = posts.filter(expiration__lt=today.isoformat())
+                    elif filters == "interest":
+                        # TODO FIGURE LOGIC OUT
+                        posts = posts
+            except AttributeError:
+                test = ""
+                return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
+
+            test = ""
+            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
         return render(request, 'user/candidate_dashboard.html', {'user': user})
 
 

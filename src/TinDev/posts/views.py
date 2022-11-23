@@ -23,14 +23,14 @@ def create(request):
     return render(request, 'Posts/create.html', {'form': form})
 
 
-def getPosts(id=-1):
+def getPosts(query=-1):
     '''Gets specific post id, else returns all posts'''
-    if id < 0:
+    if query == -1:
         posts = Post.objects.all()
         return posts
 
     try:
-        return Post.objects.get(pk=id)
+        return Post.objects.get(query)
     except ObjectDoesNotExist:
         return None
 

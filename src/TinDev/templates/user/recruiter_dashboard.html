@@ -8,7 +8,29 @@
     <body>
         {% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
 
+        <select id="filter" name="filter">
+            <option value="all" selected>All Posts</option>
+            <a href="/user/dashboard/active"> <option value="active"> Active posts only </option>
+            <option value="inactive"> Inactive posts only.</option>
+            <option value="interest"> Posts with at least 1 interested candidates</option>
+        </select>
+
+        {% comment %} <a href=url onClick="updateFilters();"><button>View</button></a> {% endcomment %}
+
         {% include "../Posts/posts.html" %}
-        <script src="" async defer></script>
+        <script>
+            let filters = '';
+            let url = "";
+            function updateFilters() {
+
+                filters = document.getElementById("filter").value;
+                console.log(filters)
+                if (filters != "all") {
+                    filtes = filters + "/";
+                }
+                url =`/user/dashboard/${filters}`;
+                return false;
+            }
+        </script>
     </body>
 </html>
