@@ -1,16 +1,20 @@
 from django.shortcuts import render
-from django import forms
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login, logout
+from django.views import View
+from posts.views import getPosts
 from .models import User
 from .forms import CandidateForm, RecruiterForm, LoginForm
+import datetime
 
 # NOTE: See TinDev views login
 USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 
 # https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
+
+
 
 
 def new_candidate(request):
@@ -103,13 +107,49 @@ def LoginView(request):
                 return HttpResponseRedirect('/user/dashboard')
             else:
                 # TODO: Add an error message
-                return render(request, 'user/login.html')
+                return HttpResponseRedirect('/user/login')
 
 
-def candidate_dashboard(request):
-    print(request.user.username)
-    user = User.objects.get(username=request.user.username)
-    return render(request, 'user/candidate_dashboard.html', {'user': user})
+# def candidate_dashboard(request):
+#     print(request.user.username)
+#     user = User.objects.get(username=request.user.username)
+#     return render(request, 'user/candidate_dashboard.html', {'user': user})
+
+class UserDashboardView(View):
+    '''User Dashboard Logic'''
+    filters = ""
+
+
+    def get(self, request, filters=""):
+        '''Handle GET Request Logic'''
+        try:
+            user = User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/login')
+
+        print(user.user_type)
+        if user.user_type == 'Recruiter':
+            posts = getPosts()
+            try:
+                if filters:
+                    if filters == "active":
+                        # TODO FIGURE LOGIC OUT
+                        today = datetime.datetime.now(datetime.timezone.utc)
+                        posts = posts.filter(expiration__gte=today.isoformat())
+                    elif filters == "inactive":
+                        # TODO FIGURE LOGIC OUT
+                        today = datetime.datetime.now(datetime.timezone.utc)
+                        posts = posts.filter(expiration__lt=today.isoformat())
+                    elif filters == "interest":
+                        # TODO FIGURE LOGIC OUT
+                        posts = posts
+            except AttributeError:
+                test = ""
+                return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
+
+            test = ""
+            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
+        return render(request, 'user/candidate_dashboard.html', {'user': user})
 
 
 def LogoutView(request):
