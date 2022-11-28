@@ -8,13 +8,7 @@
     <body>
         {% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
 
-        <select id="filter" name="filter">
-            <option value="all"><a href="/user/dashboard">All Posts</a></option>
-            <option value="active"> Active posts only</a> </option>
-            <option value="inactive"> Inactive posts only.</option>
-            <option value="interest"> Posts with at least 1 interested candidates</option>
-        </select>
-
+        <a href="/posts/create"><button>Create New Job</button></a>
 
         {% comment %} TODO: Make look prettier {% endcomment %}
         <ul>

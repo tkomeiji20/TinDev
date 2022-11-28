@@ -15,6 +15,8 @@ USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 # https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
 
 
+
+
 def new_candidate(request):
     '''Handles requests made to create candidates'''
     if request.method == 'POST':
