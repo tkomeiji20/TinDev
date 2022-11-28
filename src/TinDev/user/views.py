@@ -105,7 +105,7 @@ def LoginView(request):
                 return HttpResponseRedirect('/user/dashboard')
             else:
                 # TODO: Add an error message
-                return render(request, 'user/login.html')
+                return HttpResponseRedirect('/user/login')
 
 
 # def candidate_dashboard(request):
