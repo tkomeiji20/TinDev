@@ -9,6 +9,7 @@
         <li>Location: {{ post.location }}</li>
         <li>Skills: {{ post.skills }}</li>
         <li><a href="/posts/update/{{ post.pk }}">Update</a></li>
+        <li><a href="/posts/delete/{{ post.pk }}">Delete</a></li>
     </ul>
 {% endfor %}
 {% endif %}

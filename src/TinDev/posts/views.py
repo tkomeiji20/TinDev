@@ -19,10 +19,14 @@ def get_user_permisions(request):
 def create(request):
     # Render the dashboard or create the post depending on request type
     if request.method == 'GET':
+        # Validate the user is a recruiter
         if get_user_permisions(request) != "Recruiter":
             return HttpResponseRedirect('/user/login')
+
+        # Render the template
         form = PostForm()
         return render(request, 'Posts/create.html', {'form': form})
+
     elif request.method == 'POST':
         form = PostForm(request.POST)
         # TODO: Add a check to see valid permissions
@@ -40,6 +44,9 @@ class UpdateView(View):
     '''Handle updates to the Posts'''
     def get(self, request, id=-1):
         '''Handle the GET requests'''
+        # Validate User permissions
+        if get_user_permisions(request) != "Recruiter":
+            return HttpResponseRedirect('/user/login')
         # Validate the post
         if id < 0:
             return HttpResponseRedirect('/posts/create')
@@ -56,6 +63,9 @@ class UpdateView(View):
 
     def post(self,request, id=-1):
         '''Handle POST requests'''
+        # Validate User permissions
+        if get_user_permisions(request) != "Recruiter":
+            return HttpResponseRedirect('/user/login')
         # Verify the post exists
         if id < 0:
             return HttpResponseRedirect('/posts/create')
@@ -71,6 +81,32 @@ class UpdateView(View):
         if form.is_valid():
             form.save()
         return HttpResponseRedirect('/user/dashboard')
+
+
+class DeleteView(View):
+    '''Deletes a given post'''
+    def get(self, request, id =-1):
+        '''Delete Post from database'''
+        # Validate User permissions
+        if get_user_permisions(request) != "Recruiter":
+            return HttpResponseRedirect('/user/login')
+
+        # Verify the post exists
+        if id < 0:
+            return HttpResponseRedirect('/posts/create')
+
+        # Query Object
+        try:
+            update_post = Post.objects.get(pk=id)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/posts/create')
+
+        # TODO: Verify user is connected to post
+
+        # Delete the post
+        update_post.delete()
+        return HttpResponseRedirect('/user/dashboard/')
+
 
 def getPosts(query=-1):
     '''Gets specific post id, else returns all posts'''
