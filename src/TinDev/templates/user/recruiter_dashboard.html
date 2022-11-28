@@ -9,28 +9,21 @@
         {% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
 
         <select id="filter" name="filter">
-            <option value="all" selected>All Posts</option>
-            <a href="/user/dashboard/active"> <option value="active"> Active posts only </option>
+            <option value="all"><a href="/user/dashboard">All Posts</a></option>
+            <option value="active"> Active posts only</a> </option>
             <option value="inactive"> Inactive posts only.</option>
             <option value="interest"> Posts with at least 1 interested candidates</option>
         </select>
 
-        {% comment %} <a href=url onClick="updateFilters();"><button>View</button></a> {% endcomment %}
+
+        {% comment %} TODO: Make look prettier {% endcomment %}
+        <ul>
+            <li><a href="/user/dashboard">All Posts</a></li>
+            <li value="active"><a href="/user/dashboard/active">Active posts only</a> </li>
+            <li value="inactive"><a href="/user/dashboard/inactive">Inactive posts only.</a></li>
+            <li value="interest"><a href="/user/dashboard/interest">Posts with at least 1 interested candidates</a></li>
+        </ul>
 
         {% include "../Posts/posts.html" %}
-        <script>
-            let filters = '';
-            let url = "";
-            function updateFilters() {
-
-                filters = document.getElementById("filter").value;
-                console.log(filters)
-                if (filters != "all") {
-                    filtes = filters + "/";
-                }
-                url =`/user/dashboard/${filters}`;
-                return false;
-            }
-        </script>
     </body>
 </html>
