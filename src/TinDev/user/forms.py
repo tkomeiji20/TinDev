@@ -11,7 +11,15 @@ class CandidateForm(forms.ModelForm):
         fields = ['name', 'profile_bio', 'zipcode', 'skills', 'github',
                   'experience', 'education', 'username', 'password']
         widgets = {
-            'password': forms.PasswordInput(),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_bio': forms.TextInput(attrs={'class': 'form-control'}),
+            'zipcode': forms.TextInput(attrs={'class': 'form-control'}),
+            'skills': forms.TextInput(attrs={'class': 'form-control'}),
+            'github': forms.TextInput(attrs={'class': 'form-control'}),
+            'experience': forms.TextInput(attrs={'class': 'form-control'}),
+            'education': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
             # 'user_type': forms.HiddenInput(),
         }
 
@@ -32,5 +40,6 @@ class LoginForm(forms.ModelForm):
         model = User
         fields = ['username', 'password']
         widgets = {
-            'password': forms.PasswordInput(),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
