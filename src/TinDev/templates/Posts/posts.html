@@ -10,6 +10,14 @@
         <li>Skills: {{ post.skills }}</li>
         <li><a href="/posts/update/{{ post.pk }}">Update</a></li>
         <li><a href="/posts/delete/{{ post.pk }}">Delete</a></li>
+        {% if showInterested %}
+            <ul>
+                {% for user in post.interest.all %}
+                <li>Name of Interested User: {{user.name}} </li>
+                <li>Username of Interested User: {{user.username}} </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </ul>
 {% endfor %}
 {% endif %}

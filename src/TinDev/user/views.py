@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
@@ -124,50 +124,40 @@ class UserDashboardView(View):
         '''Handle GET Request Logic'''
         try:
             user = User.objects.get(username=request.user.username)
-        except ObjectDoesNotExist:
+        except MultipleObjectsReturned:
             return HttpResponseRedirect('/user/login')
 
         print(user.user_type)
         if user.user_type == 'Recruiter':
             posts = getPosts()
-            try:
-                if filters:
-                    if filters == "active":
-                        # TODO FIGURE LOGIC OUT
-                        today = datetime.datetime.now(datetime.timezone.utc)
-                        posts = posts.filter(expiration__gte=today.isoformat())
-                    elif filters == "inactive":
-                        # TODO FIGURE LOGIC OUT
-                        today = datetime.datetime.now(datetime.timezone.utc)
-                        posts = posts.filter(expiration__lt=today.isoformat())
-                    elif filters == "interest":
-                        # TODO FIGURE LOGIC OUT
-                        posts = posts
-            except AttributeError:
-                test = ""
-                return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
+            showInterested = False
+            # try:
+            if filters:
+                if filters == "active":
+                    # TODO FIGURE LOGIC OUT
+                    today = datetime.datetime.now(datetime.timezone.utc)
+                    posts = posts.filter(expiration__gte=today.isoformat())
+                elif filters == "inactive":
+                    # TODO FIGURE LOGIC OUT
+                    today = datetime.datetime.now(datetime.timezone.utc)
+                    posts = posts.filter(expiration__lt=today.isoformat())
+                elif filters == "interest": 
+                    # TODO FIGURE LOGIC OUT
+                    posts = posts.exclude(interest=None)
+                    showInterested = True
+                    return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested,})
+            # except AttributeError:
+            #     test = ""
+            #     print("now")
+            #     return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
 
-            test = ""
-            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
+            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested,})
         else:
             posts = getPosts()
-            # try:
-            #     print("filters")
-            #     if filters:
-            #         if filters == "active":
-            #             # TODO FIGURE LOGIC OUT
-            #             today = datetime.datetime.now(datetime.timezone.utc)
-            #             posts = posts.filter(expiration__gte=today.isoformat())
-            #         elif filters == "inactive":
-            #             # TODO FIGURE LOGIC OUT
-            #             today = datetime.datetime.now(datetime.timezone.utc)
-            #             posts = posts.filter(expiration__lt=today.isoformat())
-            #         elif filters == "interest":
-            #             # TODO FIGURE LOGIC OUT
-            #             posts = posts
-            # except AttributeError:
             print("filters: ", filters)
-            if filters:
+            if filters != "":
+                if filters == "all":
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
                 if filters == "active":
                     posts = posts.filter(status=True)
                     return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
@@ -185,10 +175,10 @@ class UserDashboardView(View):
                             if word in post.description:
                                 newPosts.append(post)
                                 break
-                        # newPosts.append(posts.filter(description.contains(word)))
-                    # posts = posts.filter(location=locations)
                     return render(request, 'Posts/posts_candidate.html', {'posts': newPosts, 'user': user, })
-                
+                if filters == "interest":
+                    posts = posts.filter(status=True)
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user,  })    
             return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, })
         
 
