@@ -1,0 +1,20 @@
+{% block posts %}
+
+{% if posts %}
+{% for post in posts %}
+    <h4>{{ post.position }}: {{ post.company }}</h4>
+    <ul>
+        <li>Description: {{ post.description }}</li>
+        <li>Part/Full: {{ post.type }}</li>
+        <li>Location: {{ post.location }}</li>
+        <li>Skills: {{ post.skills }}</li>
+        {% if post.status == True %}
+            <li>Status: Active</li>
+        {% else %}  
+            <li>Status: Not Active</li>
+        {% endif %}
+    </ul>
+{% endfor %}
+{% endif %}
+{% endblock %}
+<a href="/user/dashboard/">Return to dashboard</a></li>

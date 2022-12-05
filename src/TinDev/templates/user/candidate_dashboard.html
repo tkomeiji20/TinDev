@@ -8,5 +8,42 @@
     <body>
         <h2>Welcome Back, {{ user.name }}</h2>
         <a href='/user/logout'><button>Logout</button></a>
+
+        {% comment %} TODO: Make look prettier {% endcomment %}
+        <ul>
+            <li><a href="/user/dashboard/all">All Posts</a></li>
+            <li value="active"><a href="/user/dashboard/active">Display All Active Posts</a> </li>
+            <li value="inactive"><a href="/user/dashboard/inactive">Display All Inactive Posts</a></li> <br>
+            If you would like to filter jobs based on location then enter a location in the text box <br> 
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" >
+            <button onclick="myFunction()">Filter Location</button>
+        <script>
+        function myFunction() {
+            filter_location = document.getElementById("location").value;
+           console.log(filter_location);
+           window.location.href=`/user/dashboard/location/${filter_location}`;
+
+        }
+        </script>
+           <br>
+           <br>
+            If you would like to filter jobs based on the jobs description then enter any description in the text box <br> 
+            <label for="Description">Description:</label>
+            <input type="text" id="Description" name="Description" >
+            <button onclick="myFunction1()">Filter by Description</button>
+        <script>
+        function myFunction1() {
+            filter_des = document.getElementById("Description").value;
+        window.location.href=`/user/dashboard/Description/${filter_des}`;
+
+        }
+        </script>
+        <br>
+        <br>
+        </ul>
+
+    </body>
+</html>
     </body>
 </html>

@@ -120,6 +120,37 @@ def getPosts(query=-1):
         return None
 
 
+'''Handles interest to the Posts from the Users'''
+def Interest(request, id_post=-1, id_user=-1, check = None):
+    
+    '''Handle the GET requests'''
+    # Validate the post
+    if id_post < 0:
+        return HttpResponseRedirect('/user/candidate_dashboard.html')
+
+    # Validate the user and user permissions
+    if id_user < 0:
+        return HttpResponseRedirect('/user/candidate_dashboard.html')
+    user = User.objects.get(pk=id_user)
+    try:
+        if user.user_type != "candidate":
+            print(user.user_type)
+            return HttpResponseRedirect('/user/login')
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect('/user/login')
+    # Query Object
+    try:
+        interest_post = Post.objects.get(pk=id_post)
+        if check != None:
+            if check == False:
+                interest_post.interest.delete(user.pk)
+            else:
+                interest_post.interest.add(user.pk)
+            interest_post.save()
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect('/user/candidate_dashboard.html')
+    
+    return HttpResponseRedirect('/user/dashboard/interest/')
 
 def index(request):
     return render(request, 'index.html')
