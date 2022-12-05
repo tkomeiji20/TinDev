@@ -22,7 +22,6 @@ def new_candidate(request):
     if request.method == 'POST':
         # Create the candidate
         form = CandidateForm(request.POST)
-
         if form.is_valid():
             username = form.cleaned_data['username']
             # Check if someone already made the username
@@ -34,6 +33,7 @@ def new_candidate(request):
 
                 # Change the user_type to candidate
                 user = User.objects.get(username=username)
+                print("user: ", user)
                 user.user_type = 'candidate'
                 user.save()
 
@@ -120,7 +120,7 @@ class UserDashboardView(View):
     filters = ""
 
 
-    def get(self, request, filters=""):
+    def get(self, request, filters="", more_filters=""):
         '''Handle GET Request Logic'''
         try:
             user = User.objects.get(username=request.user.username)
@@ -149,7 +149,48 @@ class UserDashboardView(View):
 
             test = ""
             return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
-        return render(request, 'user/candidate_dashboard.html', {'user': user})
+        else:
+            posts = getPosts()
+            # try:
+            #     print("filters")
+            #     if filters:
+            #         if filters == "active":
+            #             # TODO FIGURE LOGIC OUT
+            #             today = datetime.datetime.now(datetime.timezone.utc)
+            #             posts = posts.filter(expiration__gte=today.isoformat())
+            #         elif filters == "inactive":
+            #             # TODO FIGURE LOGIC OUT
+            #             today = datetime.datetime.now(datetime.timezone.utc)
+            #             posts = posts.filter(expiration__lt=today.isoformat())
+            #         elif filters == "interest":
+            #             # TODO FIGURE LOGIC OUT
+            #             posts = posts
+            # except AttributeError:
+            print("filters: ", filters)
+            if filters:
+                if filters == "active":
+                    posts = posts.filter(status=True)
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                if filters == "inactive":
+                    posts = posts.filter(status=False)
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                if filters == "location":
+                    posts = posts.filter(location=more_filters)
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                if filters == "Description":
+                    newPosts = list()
+                    words = more_filters.split()
+                    for word in words:
+                        for post in posts:
+                            if word in post.description:
+                                newPosts.append(post)
+                                break
+                        # newPosts.append(posts.filter(description.contains(word)))
+                    # posts = posts.filter(location=locations)
+                    return render(request, 'Posts/posts_candidate.html', {'posts': newPosts, 'user': user, })
+                
+            return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, })
+        
 
 
 def LogoutView(request):

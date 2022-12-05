@@ -19,7 +19,7 @@ class User(models.Model):
     profile_bio = models.TextField(max_length=500, blank=True)
     education = models.TextField(blank=True)
     github = models.CharField(max_length=50, blank=True)
-    experience = models.IntegerField(null=True)
+    experience = models.IntegerField(default=1)
     skills = models.TextField(null=True)
 
     # Recruiter
