@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Current Offers:</h1>
+        {% for offer in offers %}
+            <h3>{{ offer.post.company }}: {{offer.post.position}}</h3>
+            <ul>
+                <li>Salary: ${{ offer.salary }}</li>
+                <li>Expires: {{ offer.expiration }}</li>
+            </ul>
+        {% endfor %}
+        <script src="" async defer></script>
+    </body>
+</html>

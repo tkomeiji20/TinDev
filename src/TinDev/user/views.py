@@ -8,6 +8,7 @@ from posts.views import getPosts
 from .models import User
 from .forms import CandidateForm, RecruiterForm, LoginForm
 from posts.models import Post
+from offers.models import Offers
 import datetime
 
 # NOTE: See TinDev views login
@@ -186,6 +187,19 @@ class UserDashboardView(View):
                     return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest,  })
             return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, 'interest': interest, })
 
+
+class OffersView(View):
+    def get(self,request):
+        try:
+            user = User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('user/login/')
+
+        offers = Offers.objects.filter(user=user)
+
+
+        context = {'offers': offers}
+        return render(request, 'user/offers.html', context=context)
 
 
 def LogoutView(request):

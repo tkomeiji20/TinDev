@@ -8,5 +8,7 @@ import datetime
 class Offers(models.Model):
     salary = models.IntegerField()
     expiration = models.DateTimeField(default=datetime.datetime(2023, 12, 31, 11, 59, 59))
+
+    # TODO: Further Thinking this should be Many to One fields
     post = models.OneToOneField(Post, on_delete=models.CASCADE, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)

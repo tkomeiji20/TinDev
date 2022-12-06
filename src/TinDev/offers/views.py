@@ -44,10 +44,10 @@ class CreateOffer(View):
         form = OfferForm(request.POST)
         if form.is_valid():
             # TODO: Check that there is not already a user with the given username
-            form.save()
+
 
             # Add in the associated user and posts
-            offer = Offers.objects.get()
+            offer = form.save()
             offer.post = post
             offer.user = user
 
