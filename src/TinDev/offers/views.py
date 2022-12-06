@@ -25,7 +25,7 @@ class CreateOffer(View):
         # TODO: Check Permissions
 
         form = OfferForm()
-        context = {'form' : form, 'post_id': post_id, 'candidate_id': candidate_id}+
+        context = {'form' : form, 'post_id': post_id, 'candidate_id': candidate_id}
 
         # Render the form to create
         return render(request, 'Offers/create_offer.html', context)
