@@ -2,6 +2,7 @@
 
 {% if posts %}
 {% for post in posts %}
+{% comment %}TODO: If time lets use blocks here due to code repitition  {% endcomment %}
     <h4>{{ post.position }}: {{ post.company }}</h4>
     <ul>
         <li>Description: {{ post.description }}</li>
@@ -10,10 +11,30 @@
         <li>Skills: {{ post.skills }}</li>
         {% if post.status == True %}
             <li>Status: Active</li>
-        {% else %}  
+        {% else %}
             <li>Status: Not Active</li>
         {% endif %}
+
+
+        {% if not post.pk in interest %}
+            <li>Currently not Interested</li>
+        {% else %}
+            <li>Currently Interested</li>
+        {% endif %}
     </ul>
+        <div>
+            {% if not post.pk in interest %}
+            <form action="/posts/interest/{{ post.pk }}/" method="post">
+                {% csrf_token %}
+                <input type="submit" name="Interest" value="Demonstrate Interest" />
+            </form>
+            {% else %}
+            <form action="/posts/uninterest/{{ post.pk }}/" method="post">
+                {% csrf_token %}
+                <input type="submit" name="Interest" value="Not Interested" />
+            </form>
+            {% endif %}
+        <div>
 {% endfor %}
 {% endif %}
 {% endblock %}
