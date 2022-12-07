@@ -146,8 +146,24 @@ class UserDashboardView(View):
                 elif filters == "interest":
                     # TODO FIGURE LOGIC OUT
                     posts = posts.exclude(interest=None)
+
+                    scores = {}
+                    for post in posts:
+                        scores[post.id] = {}
+                        for candidate in post.interest.all():
+                            score = 0
+                            total_possible = 0
+                            for skill in post.skills.split(' '):
+                                if skill in candidate.skills.split(' '):
+                                    score += 1
+                                total_possible += 1
+                            scores[post.id][candidate.id] = score / total_possible * 0.8
+                            scores[post.id][candidate.id] += 0.2 if post.location == 'remote' or post.location == 'Remote' else 0
+
                     showInterested = True
-                    return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested,})
+                    context =  {'posts': posts, 'user': user, 'showInterested': showInterested, 'scores': scores,}
+
+                    return render(request, 'user/recruiter_dashboard.html', context=context)
             # except AttributeError:
             #     test = ""
             #     print("now")
@@ -196,7 +212,8 @@ class OffersView(View):
             return HttpResponseRedirect('user/login/')
 
         offers = Offers.objects.filter(user=user)
-        # print([x.expiration.tz for x in offers])
+
+        # Determine if job post is expired
         curr = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
         expired = set((x.id for x in  filter(lambda a: a.expiration < curr, offers)))
 
