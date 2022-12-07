@@ -1,5 +1,6 @@
 {% block posts %}
 
+{% load post_extras %}
 {% if posts %}
 {% for post in posts %}
     <h4>{{ post.position }}: {{ post.company }}</h4>
@@ -14,7 +15,7 @@
         <li>Interested Users</li>
             <ul>
                 {% for user in post.interest.all %}
-                 <li>{{user.name}}</li><a href="/offer/{{post.id}}/{{user.id}}/"><button>Offer {{user.name}}</button></a>
+                 <li>{{user.name}} Score: {{ scores|dict_get:post.id|dict_get:user.id }}</li><a href="/offer/{{post.id}}/{{user.id}}/"><button>Offer {{user.name}}</button></a>
                 {% comment %} <li>Username of Interested User: {{user.username}} </li> {% endcomment %}
                 {% endfor %}
             </ul>
