@@ -7,6 +7,8 @@ from django.views import View
 from posts.views import getPosts
 from .models import User
 from .forms import CandidateForm, RecruiterForm, LoginForm
+from posts.models import Post
+from offers.models import Offers
 import datetime
 
 # NOTE: See TinDev views login
@@ -141,11 +143,27 @@ class UserDashboardView(View):
                     # TODO FIGURE LOGIC OUT
                     today = datetime.datetime.now(datetime.timezone.utc)
                     posts = posts.filter(expiration__lt=today.isoformat())
-                elif filters == "interest": 
+                elif filters == "interest":
                     # TODO FIGURE LOGIC OUT
                     posts = posts.exclude(interest=None)
+
+                    scores = {}
+                    for post in posts:
+                        scores[post.id] = {}
+                        for candidate in post.interest.all():
+                            score = 0
+                            total_possible = 0
+                            for skill in post.skills.split(' '):
+                                if skill in candidate.skills.split(' '):
+                                    score += 1
+                                total_possible += 1
+                            scores[post.id][candidate.id] = score / total_possible * 0.8
+                            scores[post.id][candidate.id] += 0.2 if post.location == 'remote' or post.location == 'Remote' else 0
+
                     showInterested = True
-                    return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested,})
+                    context =  {'posts': posts, 'user': user, 'showInterested': showInterested, 'scores': scores,}
+
+                    return render(request, 'user/recruiter_dashboard.html', context=context)
             # except AttributeError:
             #     test = ""
             #     print("now")
@@ -155,18 +173,22 @@ class UserDashboardView(View):
         else:
             posts = getPosts()
             print("filters: ", filters)
+            # Create a set of the posts which the user is interested in
+            interest = set([x.id for x in filter(lambda post:user in post.interest.all(), Post.objects.all())])
+
+            # Apply Filters
             if filters != "":
                 if filters == "all":
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest, })
                 if filters == "active":
                     posts = posts.filter(status=True)
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest, })
                 if filters == "inactive":
                     posts = posts.filter(status=False)
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest, })
                 if filters == "location":
                     posts = posts.filter(location=more_filters)
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest, })
                 if filters == "Description":
                     newPosts = list()
                     words = more_filters.split()
@@ -175,12 +197,28 @@ class UserDashboardView(View):
                             if word in post.description:
                                 newPosts.append(post)
                                 break
-                    return render(request, 'Posts/posts_candidate.html', {'posts': newPosts, 'user': user, })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': newPosts, 'user': user, 'interest': interest, })
                 if filters == "interest":
                     posts = posts.filter(status=True)
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user,  })    
-            return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, })
-        
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest,  })
+            return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, 'interest': interest, })
+
+
+class OffersView(View):
+    def get(self,request):
+        try:
+            user = User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('user/login/')
+
+        offers = Offers.objects.filter(user=user)
+
+        # Determine if job post is expired
+        curr = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
+        expired = set((x.id for x in  filter(lambda a: a.expiration < curr, offers)))
+
+        context = {'offers': offers, 'expired': expired,}
+        return render(request, 'user/offers.html', context=context)
 
 
 def LogoutView(request):
