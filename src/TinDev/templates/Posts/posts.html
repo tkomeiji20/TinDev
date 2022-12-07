@@ -11,10 +11,11 @@
         <li><a href="/posts/update/{{ post.pk }}">Update</a></li>
         <li><a href="/posts/delete/{{ post.pk }}">Delete</a></li>
         {% if showInterested %}
+        <li>Interested Users</li>
             <ul>
                 {% for user in post.interest.all %}
-                <li>Name of Interested User: {{user.name}} </li>
-                <li>Username of Interested User: {{user.username}} </li>
+                 <li>{{user.name}}</li><a href="/offer/{{post.id}}/{{user.id}}/"><button>Offer {{user.name}}</button></a>
+                {% comment %} <li>Username of Interested User: {{user.username}} </li> {% endcomment %}
                 {% endfor %}
             </ul>
         {% endif %}

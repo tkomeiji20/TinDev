@@ -120,37 +120,61 @@ def getPosts(query=-1):
         return None
 
 
-'''Handles interest to the Posts from the Users'''
-def Interest(request, id_post=-1, id_user=-1, check = None):
-    
-    '''Handle the GET requests'''
+
+def Interest(request, id_post=-1):
+    '''Handles interest to the Posts from the Users'''
+    # Handle the GET requests
+    if request.method == 'GET':
+        return HttpResponseRedirect('/user/dashboard')
+
     # Validate the post
     if id_post < 0:
-        return HttpResponseRedirect('/user/candidate_dashboard.html')
+        return HttpResponseRedirect('/user/dashboard')
 
     # Validate the user and user permissions
-    if id_user < 0:
-        return HttpResponseRedirect('/user/candidate_dashboard.html')
-    user = User.objects.get(pk=id_user)
     try:
+        user = User.objects.get(username=request.user.username)
         if user.user_type != "candidate":
-            print(user.user_type)
             return HttpResponseRedirect('/user/login')
     except ObjectDoesNotExist:
         return HttpResponseRedirect('/user/login')
     # Query Object
     try:
         interest_post = Post.objects.get(pk=id_post)
-        if check != None:
-            if check == False:
-                interest_post.interest.delete(user.pk)
-            else:
-                interest_post.interest.add(user.pk)
-            interest_post.save()
+        interest_post.interest.add(user)
+        interest_post.save()
     except ObjectDoesNotExist:
-        return HttpResponseRedirect('/user/candidate_dashboard.html')
-    
-    return HttpResponseRedirect('/user/dashboard/interest/')
+        return HttpResponseRedirect('/user/dashboard')
+
+    return HttpResponseRedirect('/user/dashboard/')
+
+def Uninterest(request, id_post=-1):
+    '''Handles interest to the Posts from the Users'''
+    # Handle the GET requests
+    if request.method == 'GET':
+        return HttpResponseRedirect('/user/dashboard')
+
+    # Validate the post
+    if id_post < 0:
+        return HttpResponseRedirect('/user/dashboard')
+
+    # Validate the user and user permissions
+    try:
+        user = User.objects.get(username=request.user.username)
+        if user.user_type != "candidate":
+            return HttpResponseRedirect('/user/login')
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect('/user/login')
+    # Query Object
+    try:
+        interest_post = Post.objects.get(pk=id_post)
+        interest_post.interest.remove(user)
+        interest_post.save()
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect('/user/dashboard')
+
+    return HttpResponseRedirect('/user/dashboard/')
+
 
 def index(request):
     return render(request, 'index.html')
