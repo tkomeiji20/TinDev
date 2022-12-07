@@ -12,8 +12,25 @@
             <ul>
                 <li>Salary: ${{ offer.salary }}</li>
                 <li>Expires: {{ offer.expiration }}</li>
+                <li>Status: {{ offer.status }}</li>
+                {% if offer.id in expired %}
+                <li>Expired: True</li>
+                {% else %}
+                <li>Expired: False</li>
+                <li>
+                    <form action="/offer/decision/{{ offer.id}}/accept/" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Accept">
+                    </form>
+                </li>
+                <li>
+                    <form action="/offer/decision/{{ offer.id }}/reject/" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Reject">
+                    </form>
+                </li>
+                {% endif %}
             </ul>
         {% endfor %}
-        <script src="" async defer></script>
     </body>
 </html>

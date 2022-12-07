@@ -196,9 +196,11 @@ class OffersView(View):
             return HttpResponseRedirect('user/login/')
 
         offers = Offers.objects.filter(user=user)
+        # print([x.expiration.tz for x in offers])
+        curr = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
+        expired = set((x.id for x in  filter(lambda a: a.expiration < curr, offers)))
 
-
-        context = {'offers': offers}
+        context = {'offers': offers, 'expired': expired,}
         return render(request, 'user/offers.html', context=context)
 
 

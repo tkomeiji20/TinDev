@@ -43,7 +43,6 @@ class CreateOffer(View):
 
         form = OfferForm(request.POST)
         if form.is_valid():
-            # TODO: Check that there is not already a user with the given username
 
 
             # Add in the associated user and posts
@@ -53,4 +52,25 @@ class CreateOffer(View):
 
             # Save to DB
             offer.save()
+        return HttpResponseRedirect('/user/dashboard')
+
+
+class Decision(View):
+    def post(self, response, offer_id, response_type):
+        # TODO: Check permissions
+
+        try:
+            offer = Offers.objects.get(id=offer_id)
+
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/dashboard')
+
+        if response_type == 'accept':
+            offer.status = Offers.STATUS[1][1]
+        elif response_type == 'reject':
+            offer.status = Offers.STATUS[2][1]
+        else:
+            return HttpResponseRedirect('/user/dashboard')
+
+        offer.save()
         return HttpResponseRedirect('/user/dashboard')
