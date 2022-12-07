@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <title></title>
-    <h1>Create Candidate</h1>
+    <h1>Create New User</h1>
     <br />
     <br />
     <link rel="stylesheet" href="" />
@@ -14,7 +14,7 @@
     <div class="form-group">
       <form action="{{ user_type }}" method="post">
         {% csrf_token %} {{ form.as_p }}
-        <input type="submit" value="Submit" class="btn-primary" />
+        <input type="submit" value="Submit" />
       </form>
     </div>
   </body>

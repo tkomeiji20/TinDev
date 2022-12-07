@@ -31,7 +31,11 @@ class RecruiterForm(forms.ModelForm):
         # Put Candidate forms
         fields = ['name', 'company', 'zipcode', 'username', 'password']
         widgets = {
-            'password': forms.PasswordInput(),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'zipcode': forms.TextInput(attrs={'class': 'form-control'}),
+            'company': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
 
 
