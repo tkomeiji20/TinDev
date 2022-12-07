@@ -1,24 +1,39 @@
-{% block posts %}
-
+<!DOCTYPE html>
+{% extends '../TinDev/nonNavBase.html' %} {%block content %} {% block posts %}
 {% if posts %}
-{% for post in posts %}
-    <h4>{{ post.position }}: {{ post.company }}</h4>
-    <ul>
-        <li>Description: {{ post.description }}</li>
-        <li>Part/Full: {{ post.type }}</li>
-        <li>Location: {{ post.location }}</li>
-        <li>Skills: {{ post.skills }}</li>
-        <li><a href="/posts/update/{{ post.pk }}">Update</a></li>
-        <li><a href="/posts/delete/{{ post.pk }}">Delete</a></li>
-        {% if showInterested %}
-            <ul>
-                {% for user in post.interest.all %}
-                <li>Name of Interested User: {{user.name}} </li>
-                <li>Username of Interested User: {{user.username}} </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+<div class="container">
+  {% for post in posts %}
+  <div class="row">
+      <div class="col">
+        <h4>{{ post.position }}: {{ post.company }}</h4>
+      </div>
+      <div class="col">
+        Description: {{ post.description }}
+      </div>
+      <div class="col">
+        Part/Full: {{ post.type }}
+      </div>
+      <div class="col">
+        Location: {{ post.location }}
+      </div>
+      <div class="col">
+        Skills: {{ post.skills }}
+      </div>
+      <div class="col">
+        <a href="/posts/update/{{ post.pk }}">Update</a>
+        <a href="/posts/delete/{{ post.pk }}">Delete</a>
+      </div>
+      {% if showInterested %}
+      <ul>
+          <div class="col">
+            {% for user in post.interest.all %}
+            <li>Name of Interested User: {{user.name}}</li>
+            <li>Username of Interested User: {{user.username}}</li>
+        {% endfor %}
+          </div>
+      </ul>
+      {% endif %}
     </ul>
-{% endfor %}
-{% endif %}
-{% endblock %}
+  {% endfor %}
+</div>
+{% endif %} {% endblock %} {% endblock %}

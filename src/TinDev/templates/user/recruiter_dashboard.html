@@ -1,24 +1,58 @@
 <!DOCTYPE html>
+{% extends '../TinDev/nonNavBase.html' %} {%block content %}
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        {% block greeting %}<h2>Welcome Back, {{ user.name }}</h2>{% endblock %}
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <br />
+    <a
+      type="button"
+      class="btn btn-primary btn-lg"
+      href="/posts/create"
+      style="margin-left: 20px"
+      >Create New Job</a
+    >
+    <a
+      href="/user/logout"
+      type="button"
+      class="btn btn-secondary btn-sm"
+      style="margin-left: 10px"
+      >Logout</a
+    >
+    <br />
+    <br />
+    {% block greeting %}
+    <h2 style="text-align: center">Welcome Back, {{ user.name }}</h2>
+    {% endblock %}
 
-        <a href="/posts/create"><button>Create New Job</button></a>
-        <a href='/user/logout'><button>Logout</button></a>
+    <ul class="nav justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link" href="/user/dashboard"
+          >All Posts <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" value="active">
+        <a class="nav-link" href="/user/dashboard/active">Active Posts Only</a>
+      </li>
+      <li class="nav-item" value="inactive">
+        <a class="nav-link" href="/user/dashboard/inactive"
+          >Inactive Posts Only</a
+        >
+      </li>
+      <li class="nav-item" value="interest">
+        <a class="nav-link" href="/user/dashboard/interest"
+          >Posts With At Least 1 Interested Candidate</a
+        >
+      </li>
+    </ul>
+    {% comment %} TODO: Make look prettier {% endcomment %}
+    <ul class="list-group"></ul>
 
-        {% comment %} TODO: Make look prettier {% endcomment %}
-        <ul>
-            <li><a href="/user/dashboard">All Posts</a></li>
-            <li value="active"><a href="/user/dashboard/active">Active posts only</a> </li>
-            <li value="inactive"><a href="/user/dashboard/inactive">Inactive posts only.</a></li>
-            <li value="interest"><a href="/user/dashboard/interest">Posts with at least 1 interested candidates</a></li>
-        </ul>
-
-        {% include "../Posts/posts.html" %}
-    </body>
+    {% include "../Posts/posts.html" %}
+  </body>
 </html>
+
+{% endblock %}
