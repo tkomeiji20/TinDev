@@ -14,7 +14,7 @@
       <h2>Login</h2>
       {% comment %} Add some error message if error is defined {% endcomment %}
       <div class="form-group">
-        <form action="{{ user_type }}" method="post">
+        <form action="/user/login/{{ user_type }}" method="post">
           {% csrf_token %} {{ form.as_p }}
           <input type="submit" value="Login" />
         </form>
