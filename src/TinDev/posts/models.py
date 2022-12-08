@@ -14,3 +14,4 @@ class Post(models.Model):
     expiration = models.DateTimeField(default=datetime.datetime(2023, 12, 31, 11, 59, 59))
     status = models.BooleanField(default=True)
     interest = models.ManyToManyField(User)
+    recruiter_id = models.IntegerField(default=-1)
