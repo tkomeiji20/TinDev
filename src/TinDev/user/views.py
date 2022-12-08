@@ -159,8 +159,8 @@ class UserDashboardView(View):
                                 if skill in candidate.skills.split(' '):
                                     score += 1
                                 total_possible += 1
-                            scores[post.id][candidate.id] = score / total_possible * 0.8
-                            scores[post.id][candidate.id] += 0.2 if post.location == 'remote' or post.location == 'Remote' else 0
+                            scores[post.id][candidate.id] = score / total_possible * 80
+                            scores[post.id][candidate.id] += 20 if post.location == 'remote' or post.location == 'Remote' else 0
 
                     showInterested = True
                     context =  {'posts': posts, 'user': user, 'showInterested': showInterested, 'scores': scores,}

@@ -19,6 +19,6 @@ Project contributors (sorted alphabetically)
 * **[Trevor Komeiji](https://github.com/tkomeiji20)**
 
   * Designed Database Tables
-  * Backend for 1.1-1.4, 2.1-2.4, 2.6, 3.2-3.4
-  * Frontend on Candidate Views
+  * Backend for 1.1-1.4, 2.1-2.6, 3.2-3.4
+  * Frontend on all of the different screens a candidate can reach
   * Random Bugfixes
