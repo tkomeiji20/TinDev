@@ -1,20 +1,21 @@
 {% extends '../TinDev/login_base.html' %} {% block content %}
 {% if posts %}
 <div class="row">
-<div class="col-8">
-    <h2 style="margin: 10px;">Job Listings:</h2>
-</div>
-<div class="dropdown col-4">
-    <a style="margin-top: 10px;" class="btn btn-info btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        View Job Postings
-    </a>
-
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item" href="/user/dashboard/all">Show All Posts</a>
-        <a class="dropdown-item" href="/user/dashboard/active">Show Active Posts</a>
-        <a class="dropdown-item" href="/user/dashboard/inactive">Show Inactive Posts</a>
+    <div class="col-8">
+        <h2 style="margin: 10px;">Job Listings:</h2>
     </div>
-</div>
+    <div class="dropdown col-4">
+        <a style="margin-top: 10px;" class="btn btn-info btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Jobs and Offers
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="/user/dashboard/all">Show All Posts</a>
+            <a class="dropdown-item" href="/user/dashboard/active">Show Active Posts</a>
+            <a class="dropdown-item" href="/user/dashboard/inactive">Show Inactive Posts</a>
+            <a class="dropdown-item" href="/user/offers">Show Offers</a>
+        </div>
+    </div>
 </div>
 {% for post in posts %}
 {% if post.pk in interest %}
@@ -40,9 +41,9 @@
     </div>
     <div class="card-footer">
         {% if not post.pk in interest %}
-            <p class="float-left">Currently not Interested</p>
+            <p class="card-text float-left text-muted">Currently not Interested</p>
         {% else %}
-            <p class="float-left">Currently Interested</p>
+            <p class="card-text float-left text-muted">Currently Interested</p>
         {% endif %}
         {% comment %} Buttons to submit Interest {% endcomment %}
         {% if not post.pk in interest %}

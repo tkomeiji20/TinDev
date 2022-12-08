@@ -1,14 +1,32 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <h1>Current Offers:</h1>
+{% extends '../TinDev/login_base.html' %}
+{% block content %}
+        <div class="row">
+            <div class="col-8">
+                <h2 style="margin: 10px;">Offers:</h2>
+            </div>
+            <div class="dropdown col-4">
+                <a style="margin-top: 10px;" class="btn btn-info btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    View Jobs and Offers
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/user/dashboard/all">Show All Posts</a>
+                    <a class="dropdown-item" href="/user/dashboard/active">Show Active Posts</a>
+                    <a class="dropdown-item" href="/user/dashboard/inactive">Show Inactive Posts</a>
+                    <a class="dropdown-item" href="/user/offers">Show Offers</a>
+                </div>
+            </div>
+        </div>
         {% for offer in offers %}
-            <h3>{{ offer.post.company }}: {{offer.post.position}}</h3>
+        {% if offer.status == "Accepted" %}
+        <div class="card border-success" style="margin-top: 20px;">
+        {% elif offer.status == "Rejected" or offer.id in expired %}
+        <div class="card border-danger" style="margin-top: 20px;">
+        {% else %}
+        <div class="card" style="margin-top: 20px;">
+        {% endif %}
+            <div class="card-header"><h3>{{ offer.post.company }}: {{offer.post.position}}</h3></div>
+            <div class="card-body">
             <ul>
                 <li>Salary: ${{ offer.salary }}</li>
                 <li>Expires: {{ offer.expiration }}</li>
@@ -17,20 +35,23 @@
                 <li>Expired: True</li>
                 {% else %}
                 <li>Expired: False</li>
-                <li>
-                    <form action="/offer/decision/{{ offer.id}}/accept/" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Accept">
-                    </form>
-                </li>
-                <li>
-                    <form action="/offer/decision/{{ offer.id }}/reject/" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Reject">
-                    </form>
-                </li>
                 {% endif %}
             </ul>
+        </div>
+            <div class="card-footer">
+                {% if not offer.id in expired %}
+                <form action="/offer/decision/{{ offer.id}}/accept/" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-success float-left" type="submit" value="Accept">
+                </form>
+                <form action="/offer/decision/{{ offer.id }}/reject/" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger float-right" type="submit" value="Reject">
+                </form>
+                {% else %}
+                {% endif %}
+            </div>
+
+        </div>
         {% endfor %}
-    </body>
-</html>
+{% endblock %}
