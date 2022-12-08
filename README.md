@@ -24,6 +24,10 @@ Install Django
   ```sh
   python -m pip install Django
   ```
+* Django-crispy-forms
+  ```sh
+  pip3 install Django-crispy-forms
+  ```
 
 ### Installation
 
