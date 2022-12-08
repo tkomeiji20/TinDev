@@ -13,17 +13,25 @@
       <div class="col"><b>Location: </b>{{ post.location }}</div>
       <div class="col"><b>Skills: </b>{{ post.skills }}</div>
       <div class="col">
-        <a href="/posts/update/{{ post.pk }}">Update</a>
-        <a href="/posts/delete/{{ post.pk }}">Delete</a>
+        <a href="/posts/update/{{ post.pk }}" style="padding-right: 20px"
+          >Update
+        </a>
+        <a href="/posts/delete/{{ post.pk }}"> Delete</a>
       </div>
       {% if showInterested %}
       <ul>
-        <div class="col">
-          {% for user in post.interest.all %}
-          <li><b>Name of Interested User: </b>{{user.name}}</li>
-          <li><b>Username of Interested User: </b>{{user.username}}</li>
+      </div>
+        <div class="row" style="padding-top: 10px; padding-bottom: 10px">
+            {% for user in post.interest.all %}
+            <div class="col">
+            <p style="padding-left: 20px"><b>Name of Interested User: </b>{{user.name}}</p>
+            </div>
+            <div class="col">
+            <p><b>Username of Interested User: </b>{{user.username}}</p>
+            </div>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
       </ul>
     </div>
     {% endif %}
