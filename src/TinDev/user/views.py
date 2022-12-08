@@ -10,13 +10,13 @@ from .forms import CandidateForm, RecruiterForm, LoginForm
 from posts.models import Post
 from offers.models import Offers
 import datetime
+from django import forms
+from django.contrib import messages
 
 # NOTE: See TinDev views login
 USER_TYPES = [('Recruiter', 'recruiter'), ('Candidate', 'candidate')]
 
 # https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
-
-
 
 
 def new_candidate(request):
@@ -29,7 +29,7 @@ def new_candidate(request):
             # Check if someone already made the username
             try:
                 user = DjangoUser.objects.get(username=username)
-                return HttpResponseRedirect('/user/login')
+                return HttpResponseRedirect('/user/login/error/')
             except ObjectDoesNotExist:
                 form.save()
 
@@ -108,7 +108,8 @@ def LoginView(request):
                 login(request, user)
                 return HttpResponseRedirect('/user/dashboard')
             else:
-                # TODO: Add an error message
+                messages.warning(
+                    request, 'Incorrect Username or Password')
                 return HttpResponseRedirect('/user/login')
 
 
@@ -120,7 +121,6 @@ def LoginView(request):
 class UserDashboardView(View):
     '''User Dashboard Logic'''
     filters = ""
-
 
     def get(self, request, filters="", more_filters=""):
         '''Handle GET Request Logic'''
@@ -159,11 +159,13 @@ class UserDashboardView(View):
                                 if skill in candidate.skills.split(' '):
                                     score += 1
                                 total_possible += 1
-                            scores[post.id][candidate.id] = score / total_possible * 80
+                            scores[post.id][candidate.id] = score / \
+                                total_possible * 80
                             scores[post.id][candidate.id] += 20 if post.location == 'remote' or post.location == 'Remote' else 0
 
                     showInterested = True
-                    context =  {'posts': posts, 'user': user, 'showInterested': showInterested, 'scores': scores,}
+                    context = {'posts': posts, 'user': user,
+                               'showInterested': showInterested, 'scores': scores, }
 
                     return render(request, 'user/recruiter_dashboard.html', context=context)
             # except AttributeError:
@@ -171,12 +173,13 @@ class UserDashboardView(View):
             #     print("now")
             #     return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'test': test,})
 
-            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested,})
+            return render(request, 'user/recruiter_dashboard.html', {'posts': posts, 'user': user, 'showInterested': showInterested, })
         else:
             posts = getPosts()
             print("filters: ", filters)
             # Create a set of the posts which the user is interested in
-            interest = set([x.id for x in filter(lambda post:user in post.interest.all(), Post.objects.all())])
+            interest = set([x.id for x in filter(
+                lambda post:user in post.interest.all(), Post.objects.all())])
 
             # Apply Filters
             if filters != "":
@@ -202,12 +205,12 @@ class UserDashboardView(View):
                     return render(request, 'Posts/posts_candidate.html', {'posts': newPosts, 'user': user, 'interest': interest, })
                 if filters == "interest":
                     posts = posts.filter(status=True)
-                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest,  })
+                    return render(request, 'Posts/posts_candidate.html', {'posts': posts, 'user': user, 'interest': interest, })
             return render(request, 'user/candidate_dashboard.html', {'posts': posts, 'user': user, 'interest': interest, })
 
 
 class OffersView(View):
-    def get(self,request):
+    def get(self, request):
         try:
             user = User.objects.get(username=request.user.username)
         except ObjectDoesNotExist:
@@ -217,9 +220,10 @@ class OffersView(View):
 
         # Determine if job post is expired
         curr = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
-        expired = set((x.id for x in  filter(lambda a: a.expiration < curr, offers)))
+        expired = set((x.id for x in filter(
+            lambda a: a.expiration < curr, offers)))
 
-        context = {'offers': offers, 'expired': expired,}
+        context = {'offers': offers, 'expired': expired, }
         return render(request, 'user/offers.html', context=context)
 
 

@@ -13,7 +13,7 @@
 - **[Jon Galassi](https://github.com/jgalassi1)**
 
   - Mainly worked on the frontend of the project, and worked on making the default django templates look much nicer. Completed the frontend for the homescreen page, nav bar, login screen and creating new recruiters and candidates.
-  - Did the frontend for all of the screens a recruiter can reach including the dashboard and
+  - Did the frontend for all of the screens a recruiter can reach including the dashboard and creating a new job.
 
 - **[Trevor Komeiji](https://github.com/tkomeiji20)**
 
