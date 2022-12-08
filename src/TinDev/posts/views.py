@@ -28,13 +28,22 @@ def create(request):
         return render(request, 'Posts/create.html', {'form': form})
 
     elif request.method == 'POST':
+        # Get the user
+        try:
+            user = User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/login')
+
         form = PostForm(request.POST)
         # TODO: Add a check to see valid permissions
         if get_user_permisions(request) != "Recruiter":
             return HttpResponseRedirect('/user/login')
         # Check: https://docs.djangoproject.com/en/4.1/topics/auth/default/
         if form.is_valid():
-            form.save()
+            post = form.save()
+
+            post.recruiter_id = user.id
+            post.save()
             return HttpResponseRedirect('/user/dashboard')
 
     form = PostForm()
@@ -108,7 +117,7 @@ class DeleteView(View):
         return HttpResponseRedirect('/user/dashboard/')
 
 
-def getPosts(query=-1):
+def getPosts(query=-1, recruiter_id=-1):
     '''Gets specific post id, else returns all posts'''
     if query == -1:
         posts = Post.objects.all()

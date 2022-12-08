@@ -43,7 +43,7 @@ def new_candidate(request):
                 DjangoUser.objects.create_user(
                     username=username, password=user.password)
                 return HttpResponseRedirect('/user/login')
-        return HttpResponseRedirect('/user/login/error/')
+        return HttpResponseRedirect('/user/login/')
     else:
         # Show the form
         form = CandidateForm()
@@ -138,7 +138,7 @@ class UserDashboardView(View):
 
         print(user.user_type)
         if user.user_type == 'Recruiter':
-            posts = getPosts()
+            posts = filter(lambda post:post.recruiter_id == user.id, getPosts())
             showInterested = False
             # try:
             if filters:
