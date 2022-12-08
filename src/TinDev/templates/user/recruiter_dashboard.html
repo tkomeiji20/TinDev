@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="" />
   </head>
   <body>
-    <div style="background-color: #275dad">
+    <div class="row" style="background-color: #275dad; padding: 20 px; ">
       <br />
       <a
         type="button"
-        class="btn btn-info btn-lg"
+        class="btn btn-info btn-lg float-md-left col-12 col-md-3"
         href="/posts/create"
         style="margin-left: 20px"
         >Create New Job</a
       >
+      <h2 class="float-md-left col-12 col-md-6" style="text-align: center; color: WHITE">
+        Welcome Back, {{ user.name }}
+      </h2>
       <a
         href="/user/logout"
         type="button"
-        class="btn btn-outline-light btn-lg"
+        class="btn btn-outline-light btn-lg float-md-left col-12 col-md-2"
         style="margin-left: 10px"
         >Logout</a
       >
-      {% block greeting %}
-      <h2 style="text-align: center; color: WHITE">
-        Welcome Back, {{ user.name }}
-      </h2>
-      {% endblock %}
+
+
 
       <br />
     </div>

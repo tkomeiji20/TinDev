@@ -128,6 +128,8 @@ class UserDashboardView(View):
             user = User.objects.get(username=request.user.username)
         except MultipleObjectsReturned:
             return HttpResponseRedirect('/user/login')
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/login')
 
         print(user.user_type)
         if user.user_type == 'Recruiter':
