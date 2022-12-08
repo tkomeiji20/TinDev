@@ -7,28 +7,31 @@
     <link rel="stylesheet" href="" />
   </head>
   <body>
-    <br />
-    <a
-      type="button"
-      class="btn btn-primary btn-lg"
-      href="/posts/create"
-      style="margin-left: 20px"
-      >Create New Job</a
-    >
-    <a
-      href="/user/logout"
-      type="button"
-      class="btn btn-secondary btn-sm"
-      style="margin-left: 10px"
-      >Logout</a
-    >
-    <br />
-    <br />
-    {% block greeting %}
-    <h2 style="text-align: center">Welcome Back, {{ user.name }}</h2>
-    {% endblock %}
+    <div style="background-color: #275dad">
+      <br />
+      <a
+        type="button"
+        class="btn btn-info btn-lg"
+        href="/posts/create"
+        style="margin-left: 20px"
+        >Create New Job</a
+      >
+      <a
+        href="/user/logout"
+        type="button"
+        class="btn btn-outline-light btn-lg"
+        style="margin-left: 10px"
+        >Logout</a
+      >
+      {% block greeting %}
+      <h2 style="text-align: center; color: WHITE">
+        Welcome Back, {{ user.name }}
+      </h2>
+      {% endblock %}
 
-    <ul class="nav justify-content-center">
+      <br />
+    </div>
+    <ul class="nav justify-content-center" style="background-color: #fcf7f8">
       <li class="nav-item">
         <a class="nav-link" href="/user/dashboard"
           >All Posts <span class="sr-only">(current)</span></a
@@ -50,7 +53,7 @@
     </ul>
     {% comment %} TODO: Make look prettier {% endcomment %}
     <ul class="list-group"></ul>
-
+    <br />
     {% include "../Posts/posts.html" %}
   </body>
 </html>

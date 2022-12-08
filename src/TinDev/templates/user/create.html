@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <title></title>
-    <h1>Create New User</h1>
+    <h1>create new {{ user_type }}</h1>
     <br />
     <br />
     <link rel="stylesheet" href="" />
   </head>
 
-  <body>
+  <body style="background-color: #fcf7f8">
     <div class="form-group">
       <form action="{{ user_type }}" method="post">
         {% csrf_token %} {{ form.as_p }}
