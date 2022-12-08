@@ -1,41 +1,80 @@
-{% block posts %}
-
+{% extends '../TinDev/login_base.html' %} {% block content %}
 {% if posts %}
+<div class="row">
+    <div class="col-8">
+        <h2 style="margin: 10px;">Job Listings:</h2>
+    </div>
+    <div class="dropdown col-4">
+        <a style="margin-top: 10px;" class="btn btn-info btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Jobs and Offers
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="/user/dashboard/all">Show All Posts</a>
+            <a class="dropdown-item" href="/user/dashboard/active">Show Active Posts</a>
+            <a class="dropdown-item" href="/user/dashboard/inactive">Show Inactive Posts</a>
+            <a class="dropdown-item" href="/user/offers">Show Offers</a>
+        </div>
+    </div>
+</div>
 {% for post in posts %}
-{% comment %}TODO: If time lets use blocks here due to code repitition  {% endcomment %}
-    <h4>{{ post.position }}: {{ post.company }}</h4>
-    <ul>
-        <li>Description: {{ post.description }}</li>
-        <li>Part/Full: {{ post.type }}</li>
-        <li>Location: {{ post.location }}</li>
-        <li>Skills: {{ post.skills }}</li>
-        {% if post.status == True %}
-            <li>Status: Active</li>
-        {% else %}
-            <li>Status: Not Active</li>
-        {% endif %}
-
-
-        {% if not post.pk in interest %}
-            <li>Currently not Interested</li>
-        {% else %}
-            <li>Currently Interested</li>
-        {% endif %}
-    </ul>
-        <div>
-            {% if not post.pk in interest %}
-            <form action="/posts/interest/{{ post.pk }}/" method="post">
-                {% csrf_token %}
-                <input type="submit" name="Interest" value="Demonstrate Interest" />
-            </form>
-            {% else %}
-            <form action="/posts/uninterest/{{ post.pk }}/" method="post">
-                {% csrf_token %}
-                <input type="submit" name="Interest" value="Not Interested" />
-            </form>
-            {% endif %}
-        <div>
-{% endfor %}
+{% if post.pk in interest %}
+<div class="card border-success" style="margin: 10px;">
+{% else %}
+<div class="card" style="margin: 10px;">
 {% endif %}
-{% endblock %}
-<a href="/user/dashboard/">Return to dashboard</a></li>
+    <div class="card-header">
+        <b>{{ post.company }}</b>: {{ post.position }}
+    </div>
+    <div class="card-body">
+        <ul>
+            <li>Description: {{ post.description }}</li>
+            <li>Part/Full: {{ post.type }}</li>
+            <li>Location: {{ post.location }}</li>
+            <li>Skills: {{ post.skills }}</li>
+            {% if post.status == True %}
+            <li>Status: Active</li>
+            {% else %}
+            <li>Status: Not Active</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="card-footer">
+        {% if not post.pk in interest %}
+            <p class="card-text float-left text-muted">Currently not Interested</p>
+        {% else %}
+            <p class="card-text float-left text-muted">Currently Interested</p>
+        {% endif %}
+        {% comment %} Buttons to submit Interest {% endcomment %}
+        {% if not post.pk in interest %}
+        <form action="/posts/interest/{{ post.pk }}/" method="post">
+            {% csrf_token %}
+            <input type="submit" name="Interest" value="Demonstrate Interest" class="float-right" />
+        </form>
+        {% else %}
+        <form action="/posts/uninterest/{{ post.pk }}/" method="post">
+            {% csrf_token %}
+            <input type="submit" name="Interest" value="No Longer Interested" class="float-right" />
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="row" style="margin-top: 10px;" >
+<div class="col-8">
+<h2>It's looking pretty empty...</h2>
+</div>
+<div class="dropdown col-4">
+    <a class="btn btn-info btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        View Job Postings
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" href="/user/dashboard/all">Show All Posts</a>
+        <a class="dropdown-item" href="/user/dashboard/active">Show Active Posts</a>
+        <a class="dropdown-item" href="/user/dashboard/inactive">Show Inactive Posts</a>
+    </div>
+</div>
+</div>
+{% endif %} {% endblock %}
