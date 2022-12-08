@@ -138,7 +138,7 @@ class UserDashboardView(View):
 
         print(user.user_type)
         if user.user_type == 'Recruiter':
-            posts = filter(lambda post:post.recruiter_id == user.id, getPosts())
+            posts = getPosts()
             showInterested = False
             # try:
             if filters:
@@ -169,6 +169,7 @@ class UserDashboardView(View):
                             scores[post.id][candidate.id] += 20 if post.location == 'remote' or post.location == 'Remote' else 0
 
                     showInterested = True
+                    posts = filter(lambda post:post.recruiter_id == user.id, posts)
                     context = {'posts': posts, 'user': user,
                                'showInterested': showInterested, 'scores': scores, }
 
