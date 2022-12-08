@@ -24,8 +24,13 @@ class CreateOffer(View):
 
         # TODO: Check Permissions
 
+        try:
+            candidate = User.objects.get(id=candidate_id)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect('/user/dashboard/')
+
         form = OfferForm()
-        context = {'form' : form, 'post_id': post_id, 'candidate_id': candidate_id}
+        context = {'form' : form, 'post_id': post_id, 'candidate_id': candidate_id, 'candidate': candidate}
 
         # Render the form to create
         return render(request, 'Offers/create_offer.html', context)
