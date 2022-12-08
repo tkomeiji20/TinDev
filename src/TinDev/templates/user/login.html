@@ -8,6 +8,9 @@
       <link rel="stylesheet" href="" />
     </head>
     <body>
+      {% if error %}
+      <h3 style="color: red;">Error Creating User (User probably exists with same username)</h3>
+      {% endif%}
       <h2>Login</h2>
       {% comment %} Add some error message if error is defined {% endcomment %}
       <div class="form-group">

@@ -29,7 +29,7 @@ def new_candidate(request):
             # Check if someone already made the username
             try:
                 user = DjangoUser.objects.get(username=username)
-                return HttpResponseRedirect('/user/login')
+                return HttpResponseRedirect('/user/login/error/')
             except ObjectDoesNotExist:
                 form.save()
 
@@ -43,7 +43,7 @@ def new_candidate(request):
                 DjangoUser.objects.create_user(
                     username=username, password=user.password)
                 return HttpResponseRedirect('/user/login')
-        return HttpResponseRedirect('/user/login')
+        return HttpResponseRedirect('/user/login/error/')
     else:
         # Show the form
         form = CandidateForm()
@@ -57,11 +57,16 @@ def new_recruiter(request):
         # Attempt to make new recruiter
         form = RecruiterForm(request.POST)
         if form.is_valid():
-            # TODO: Check that there is not already a user with the given username
-            form.save()
-            logout(request)
-            DjangoUser.objects.create_user(
-                username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            username = form.cleaned_data['username']
+            try:
+                user = DjangoUser.objects.get(username=username)
+                return HttpResponseRedirect('/user/login/error/')
+            except ObjectDoesNotExist:
+                # TODO: Check that there is not already a user with the given username
+                form.save()
+                logout(request)
+                DjangoUser.objects.create_user(
+                    username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
             return HttpResponseRedirect('/user/login')
         return HttpResponseRedirect('/user/create/recruiter')
@@ -89,13 +94,13 @@ def index(request):
     return render(request, 'user/index.html')
 
 
-def LoginView(request):
+class LoginView(View):
     '''Handle Login requests'''
-    if request.method == 'GET':
+    def get(self, request, error=""):
         # Show the form
         form = LoginForm()
-        return render(request, 'user/login.html', {'form': form})
-    elif request.method == 'POST':
+        return render(request, 'user/login.html', {'form': form, 'error': error})
+    def post(self, request):
         # Check if the user can login
         form = LoginForm(request.POST)
         if form.is_valid():
