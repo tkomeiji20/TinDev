@@ -27,9 +27,11 @@
     {% endif %}
 
   </div>
+  {% if not showInterested %}
   <div class="card-footer">
     <a class="btn btn-primary float-left" href="/posts/update/{{ post.pk }}">Update</a>
     <a class="btn btn-danger float-right" href="/posts/delete/{{ post.pk }}">Delete</a>
   </div>
+  {% endif %}
 </div>
 {% endfor %} {% endif %} {% endblock %}
