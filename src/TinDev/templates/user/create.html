@@ -11,6 +11,13 @@
   </head>
 
   <body style="background-color: #fcf7f8">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red">{{ message }}</p>
+      {% endfor %}
+    </ul>
+    {% endif %}
     <div class="form-group">
       <form action="{{ user_type }}" method="post">
         {% csrf_token %} {{ form.as_p }}
