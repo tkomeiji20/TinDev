@@ -3,37 +3,30 @@
 {% if posts %}
 <div class="container">
   {% for post in posts %}
-  <div class="row">
-      <div class="col">
-        <h4>{{ post.position }}: {{ post.company }}</h4>
+  <div class="card">
+    <div class="card-header">{{ post.position }}: {{ post.company }}</div>
+    <div class="row" style="padding-top: 10px; padding-bottom: 10px">
+      <div class="col" style="padding-left: 40px">
+        <b>Description: </b>{{ post.description }}
       </div>
-      <div class="col">
-        Description: {{ post.description }}
-      </div>
-      <div class="col">
-        Part/Full: {{ post.type }}
-      </div>
-      <div class="col">
-        Location: {{ post.location }}
-      </div>
-      <div class="col">
-        Skills: {{ post.skills }}
-      </div>
+      <div class="col"><b>Part/Full: </b>{{ post.type }}</div>
+      <div class="col"><b>Location: </b>{{ post.location }}</div>
+      <div class="col"><b>Skills: </b>{{ post.skills }}</div>
       <div class="col">
         <a href="/posts/update/{{ post.pk }}">Update</a>
         <a href="/posts/delete/{{ post.pk }}">Delete</a>
       </div>
       {% if showInterested %}
       <ul>
-          <div class="col">
-            {% for user in post.interest.all %}
-            <li>Name of Interested User: {{user.name}}</li>
-            <li>Username of Interested User: {{user.username}}</li>
+        <div class="col">
+          {% for user in post.interest.all %}
+          <li><b>Name of Interested User: </b>{{user.name}}</li>
+          <li><b>Username of Interested User: </b>{{user.username}}</li>
+        </div>
         {% endfor %}
-          </div>
       </ul>
-      {% endif %}
-    </ul>
-  {% endfor %}
+    </div>
+    {% endif %}
+  </div>
 </div>
-{% endif %} {% endblock %} {% endblock %}
+{% endfor %} {% endif %} {% endblock %} {% endblock %}
